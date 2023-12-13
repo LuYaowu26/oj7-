@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <stdlib.h>
+#pragma warning(disable:4996)
+int main() {
+    int p;//p=3或5//
+    int n, m;
+    int i, j, k = 0;
+    scanf("%d", &p);
+    scanf("%d %d", &n, &m);
+    if(p==3)
+    {
+        static double a[10001] = { 0 }, b[10001] = { 0 }, c[10001] = { 0 };
+        double Z[10001] = { 0 };//m作为循环，输入//
+        double L[10001] = { 0 };
+        double x[10001] = { 0 };
+        double LU1,LU2;//作为Lu分解的中间变量//
+        for (i = 0; i < n-1 ; i++)
+            scanf("%lf", &c[i]);//输入c
+        for (i = 0; i < n ; i ++)
+            scanf("%lf", &b[i]);//输入b
+        b[n] = 1;
+        for (i = 0; i < n-1 ; i ++)
+            scanf("%lf", &a[i]);//输入a
+        //LU分解//
+        for (i = 0; i < n - 1; i++)
+        {
+            LU1 = a[i] / b[i];//消元时上下差多少倍
+            b[i + 1] = b[i + 1] - LU1 * c[i];//给下一个b变化一下//
+            L[i] = LU1;
+        }//L分解//
+        for(i=0;i<m;i++)
+        {
+            for (j = 0; j < n; j++)
+            {
+                scanf("%lf", &Z[j]);
+            }
+            for (k = 0; k < n - 1; k++)
+            {
+                Z[k + 1] += ( - L[k] * Z[k]);//高斯消元以后，相当于乘以L的逆//
+            }
+            for (k = n-1; k>=0; k--)
+            {
+                Z[k]=Z[k]-c[k]/b[k+1]*Z[k+1];
+                x[k] = Z[k]/b[k];
+            }
+            for (k = 0; k < n; k++)
+                printf("%.4lf ", x[k]);
+        }
+    }
+    else
+    {
+        static double a[10001] = { 0 }, b[10001] = { 0 }, c[10001] = { 0 }, d[10001] = { 0 }, e[10001] = { 0 };
+        double Z[10001] = { 0 };//m作为循环，输入//
+        double L1[10001] = { 0 }, L2[10001] = { 0 };
+        double x[10001] = { 0 };
+        double LU1,LU2;
+        for (i = 0; i < n - 2; i++)
+            scanf("%lf", &e[i]);
+        for (i = 0; i < n - 1; i++)
+            scanf("%lf", &d[i]);
+        for (i = 0; i < n; i++)
+            scanf("%lf", &c[i]);
+        c[n] = 1; c[n + 1] = 1;
+        for (i = 0; i < n - 1; i++)
+            scanf("%lf", &b[i]);
+        for (i = 0; i < n-2; i++)
+            scanf("%lf", &a[i]);
+        for (i = 0; i <= n - 2; i++)
+        {
+            LU1 = b[i] / c[i];//消元时上下差多少倍
+            LU2 = a[i] / c[i];
+            c[i + 1] = c[i + 1] - LU1 * d[i];//给下一个c变化一下//
+            d[i + 1] = d[i + 1] - LU1 * e[i];
+            b[i + 1] = b[i + 1] - LU2 * d[i];
+            c[i + 2] = c[i + 2] - LU2 * e[i];
+            L1[i] = LU1;
+            L2[i] = LU2;
+        }//L分解//
+        for (i = 0; i < m; i++)
+        {
+            for (j = 0; j < n; j++)
+            {
+                scanf("%lf", &Z[j]);
+            }
+            for (k = 0; k < n - 1; k++)
+            {
+                Z[k + 1] += (-L1[k] * Z[k]);
+                Z[k + 2] += (-L2[k] * Z[k]);
+            }
+            for (k = n - 1; k >= 0; k--)
+            {
+                Z[k] = Z[k] - e[k] / c[k + 2] * Z[k + 2];
+                Z[k] = Z[k] - d[k] / c[k + 1] * Z[k + 1];
+                x[k] = Z[k] / c[k];
+            }
+            for (k = 0; k < n; k++)
+                printf("%.4lf ", x[k]);
+        }
+    }
+    return 0;
+}
